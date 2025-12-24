@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Diskon Ceria!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f8ff; /* Langit biru muda */
+            font-family: 'Open Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Mencegah scroll jika ada elemen di luar viewport */
+        }
+
+        .container {
+            background-color: #ffffff; /* Putih bersih untuk kalkulator */
+            border-radius: 25px; /* Sudut lebih membulat */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Bayangan lebih dalam */
+            width: 600px;
+            padding: 30px;
+            position: relative;
+            z-index: 1; /* Pastikan di atas elemen latar belakang */
+            border: 5px solid #ffcc00; /* Border kuning cerah */
+            box-sizing: border-box; /* Pastikan padding dan border masuk hitungan lebar */
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive; /* Font ceria */
+            text-align: center;
+            font-size: 40px;
+            color: #ff6347; /* Merah tomat cerah */
+            margin-bottom: 20px;
+            text-shadow: 2px 2px #ffcc00; /* Bayangan kuning */
+        }
+
+        .pilih-program {
+            color: #008080; /* Teal cerah */
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .options {
+            margin-bottom: 20px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #333333;
+        }
+
+        input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.8); /* Ukuran radio button lebih besar */
+            accent-color: #ff6347; /* Warna radio button saat terpilih */
+        }
+
+        hr {
+            border: 0;
+            border-top: 3px dashed #ffcc00; /* Garis putus-putus kuning */
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 20px;
+            color: #4CAF50; /* Hijau segar */
+        }
+
+        .label-text {
+            width: 250px;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .input-box {
+            padding: 8px 12px;
+            border: 3px solid #6495ED; /* Biru jagung */
+            border-radius: 10px;
+            text-align: center;
+            font-size: 20px;
+            width: 150px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-box::placeholder {
+            color: #ccc;
+        }
+
+        .btn-hitung {
+            background-image: linear-gradient(to right, #4CAF50 0%, #8BC34A 100%); /* Gradien hijau */
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            float: right;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .btn-hitung:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-reset {
+            background-image: linear-gradient(to right, #FF9800 0%, #FFC107 100%); /* Gradien oranye */
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            float: right;
+            margin-top: 15px;
+            clear: both;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-note {
+            color: #cc0000; /* Merah gelap */
+            text-align: center;
+            font-weight: bold;
+            margin-top: 100px;
+            font-size: 16px;
+            line-height: 1.6;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .result-text {
+            font-weight: bold;
+            font-size: 24px;
+            margin-top: 15px;
+            color: #008080; /* Teal cerah */
+            font-family: 'Fredoka One', cursive;
+            min-height: 30px; /* Agar tidak 'lompat' saat hasil muncul */
+        }
+
+        /* Menghilangkan panah input number */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Dekorasi tambahan untuk anak-anak */
+        .decor-left, .decor-right {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+
+        .decor-left {
+            top: 20%;
+            left: 5%;
+            background-image: url('https://i.imgur.com/your-cute-character-left.png'); /* Ganti dengan URL gambar karakter lucu */
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        .decor-right {
+            bottom: 15%;
+            right: 5%;
+            background-image: url('https://i.imgur.com/your-cute-character-right.png'); /* Ganti dengan URL gambar karakter lucu lainnya */
+            animation: bounce 2.5s infinite ease-in-out reverse;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .coin {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('https://i.imgur.com/your-coin-image.png'); /* Ganti dengan URL gambar koin */
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 0;
+            opacity: 0.7;
+            animation: spin 4s infinite linear;
+        }
+
+        .coin-1 { top: 5%; left: 10%; }
+        .coin-2 { bottom: 8%; right: 12%; }
+        .coin-3 { top: 15%; right: 20%; }
+        .coin-4 { bottom: 20%; left: 25%; }
+
+        @keyframes spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Kalkulator Diskon Ceria!</h1>
+
+    <div class="pilih-program">Pilih petualanganmu:</div>
+    
+    <div class="options">
+        <div class="option-item">
+            <input type="radio" name="mode" value="diskon" onclick="updateMode()" checked> Menemukan % Diskon
+        </div>
+        <div class="option-item">
+            <input type="radio" name="mode" value="awal" onclick="updateMode()"> Mencari Harga Awal
+        </div>
+        <div class="option-item">
+            <input type="radio" name="mode" value="bayar" onclick="updateMode()"> Menghitung Harga Bayar
+        </div>
+    </div>
+
+    <hr>
+
+    <div id="input-fields">
+        </div>
+
+    <button class="btn-hitung" onclick="hitung()">Hitung YUK!</button>
+    <button class="btn-reset" onclick="resetForm()">Ulangi</button>
+
+    <div class="footer-note">
+        Pilih salah satu program seru di atas, lalu isi semua kotak!<br>
+        Untuk angka besar, tulis saja angkanya (contoh: 128500 tanpa titik).
+    </div>
+</div>
+
+<div class="decor-left"></div>
+<div class="decor-right"></div>
+<div class="coin coin-1"></div>
+<div class="coin coin-2"></div>
+<div class="coin coin-3"></div>
+<div class="coin coin-4"></div>
+
+<script>
+    function updateMode() {
+        const mode = document.querySelector('input[name="mode"]:checked').value;
+        const container = document.getElementById('input-fields');
+        container.innerHTML = '';
+
+        if (mode === 'diskon') {
+            container.innerHTML = `
+                <div class="input-group">
+                    <div class="label-text">Harga Awal</div>
+                    <div>= Rp. <input type="number" id="v1" class="input-box" placeholder="Contoh: 100000"></div>
+                </div>
+                <div class="input-group">
+                    <div class="label-text">Uang yang Dibayar</div>
+                    <div>= Rp. <input type="number" id="v2" class="input-box" placeholder="Contoh: 80000"></div>
+                </div>
+                <div class="result-text" id="hasil">% Diskon = ..... %</div>
+            `;
+        } else if (mode === 'awal') {
+            container.innerHTML = `
+                <div class="input-group">
+                    <div class="label-text">% Diskon</div>
+                    <div>= <input type="number" id="v1" class="input-box" style="width: 80px;" placeholder="Contoh: 20"> %</div>
+                </div>
+                <div class="input-group">
+                    <div class="label-text">Uang yang Dibayar</div>
+                    <div>= Rp. <input type="number" id="v2" class="input-box" placeholder="Contoh: 80000"></div>
+                </div>
+                <div class="result-text" id="hasil">Harga Awal = Rp. .....</div>
+            `;
+        } else if (mode === 'bayar') {
+            container.innerHTML = `
+                <div class="input-group">
+                    <div class="label-text">Harga Awal</div>
+                    <div>= Rp. <input type="number" id="v1" class="input-box" placeholder="Contoh: 100000"></div>
+                </div>
+                <div class="input-group">
+                    <div class="label-text">% Diskon</div>
+                    <div>= <input type="number" id="v2" class="input-box" style="width: 80px;" placeholder="Contoh: 20"> %</div>
+                </div>
+                <div class="result-text" id="hasil">Uang yang Dibayar = Rp. .....</div>
+            `;
+        }
+    }
+
+    function hitung() {
+        const mode = document.querySelector('input[name="mode"]:checked').value;
+        const v1 = parseFloat(document.getElementById('v1').value);
+        const v2 = parseFloat(document.getElementById('v2').value);
+        const hasilDiv = document.getElementById('hasil');
+
+        if (isNaN(v1) || isNaN(v2)) {
+            hasilDiv.innerHTML = `<span style="color: red;">Isi angka yang benar dulu ya!</span>`;
+            return;
+        }
+
+        if (mode === 'diskon') {
+            let d = ((v1 - v2) / v1) * 100;
+            hasilDiv.innerHTML = `% Diskon = <span style="color: #ff6347;">${d.toFixed(2)} %</span>`;
+        } else if (mode === 'awal') {
+            if (v1 >= 100) {
+                 hasilDiv.innerHTML = `<span style="color: red;">Diskon tidak boleh 100% atau lebih!</span>`;
+                 return;
+            }
+            let a = v2 / (1 - (v1 / 100));
+            hasilDiv.innerHTML = `Harga Awal = Rp. <span style="color: #ff6347;">${Math.round(a).toLocaleString('id-ID')}</span>`;
+        } else if (mode === 'bayar') {
+            if (v2 < 0 || v2 > 100) {
+                hasilDiv.innerHTML = `<span style="color: red;">% Diskon harus antara 0-100!</span>`;
+                return;
+            }
+            let b = v1 - (v1 * (v2 / 100));
+            hasilDiv.innerHTML = `Uang yang Dibayar = Rp. <span style="color: #ff6347;">${Math.round(b).toLocaleString('id-ID')}</span>`;
+        }
+    }
+
+    function resetForm() {
+        updateMode();
+        document.getElementById('v1').value = '';
+        document.getElementById('v2').value = '';
+        // Reset the result text based on the current mode
+        const mode = document.querySelector('input[name="mode"]:checked').value;
+        const hasilDiv = document.getElementById('hasil');
+        if (mode === 'diskon') hasilDiv.innerHTML = '% Diskon = ..... %';
+        else if (mode === 'awal') hasilDiv.innerHTML = 'Harga Awal = Rp. .....';
+        else if (mode === 'bayar') hasilDiv.innerHTML = 'Uang yang Dibayar = Rp. .....';
+    }
+
+    // Inisialisasi tampilan pertama kali
+    updateMode();
+</script>
+
+</body>
+</html>
